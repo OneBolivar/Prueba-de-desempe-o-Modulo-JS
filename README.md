@@ -4,7 +4,7 @@ A high-performance Single Page Application (SPA) designed to optimize corporate 
 
 ---
 
-## 🚀 Implemented Optional Improvements
+## Implemented Optional Improvements
 
 All technical stretch goals and advanced modules described in the evaluation guidelines were successfully built to guarantee full qualification points:
 
@@ -15,21 +15,21 @@ All technical stretch goals and advanced modules described in the evaluation gui
 
 ---
 
-## 📋 Core Architectural Features
+## Core Architectural Features
 
-### 🔐 Authentication, Route Guards & Session Lifecycle
+###  Authentication, Route Guards & Session Lifecycle
 - **Session Persistence Layer:** Leverages browser `LocalStorage` mechanisms to retain user sessions across reloads.
 - **Proactive Route Protection:** The router monitors state changes. Unauthenticated client instances trying to access private paths are immediately thrown back to the Login view.
 - **Role-Based Access Control (RBAC):** Applies restrictive route filters, sealing the Administrative Dashboard exclusively for authenticated users bearing the `admin` credential.
 
-### 📅 Booking Engine & Complex Business Rules (Reservations CRUD)
+###  Booking Engine & Complex Business Rules (Reservations CRUD)
 - **Administrative CRUD Privileges:** Full operational access for the `admin` profile to create, review, update, approve, reject, or permanently purge any historical entry in the central log.
 - **Standard User Workspace Flow:** Individualized client interface designed to review availability windows, submit new booking requests, track real-time approvals, or self-cancel unresolved pending inquiries.
 - **Collision Overlap Rule Validation:** A dedicated mathematical range validator runs before database insertions, automatically blocking new requests if they match an existing reservation on identical dates and intersecting hour blocks.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Core Engine:** Vanilla JavaScript (ES6+ Modular Pattern Architecture)
 - **Bundler & Dev Server:** Vite
@@ -39,21 +39,21 @@ All technical stretch goals and advanced modules described in the evaluation gui
 
 ---
 
-## 📂 Structural Directory Mapping & File Explanations
+##  Structural Directory Mapping & File Explanations
 
-### 🗺️ Core Initialization & Routing Layer
+###  Core Initialization & Routing Layer
 *   **`src/main.js`**
     *   *What it does:* The main entry point of the application. It runs as soon as the browser loads the project. It listens for the `DOMContentLoaded` event and triggers the router to render the first screen. It also imports the global TailwindCSS styles.
 *   **`src/router/router.js`**
     *   *What it does:* The central navigation system of the SPA. It handles route changes using URL hashes (like `#/home` or `#/admin`) without reloading the browser. It includes route guards to verify active sessions and restrict access to the Admin view based on roles.
 
-### 📦 Services & API Data Layer
+###  Services & API Data Layer
 *   **`src/api/http.js`**
     *   *What it does:* A centralized HTTP client wrapper. It simplifies the native JavaScript `fetch` API to communicate with JSON Server (`http://localhost:3000`). It features reusable asynchronous functions for `GET`, `POST`, `PUT`, and `DELETE` requests with automatic JSON headers.
 *   **`src/services/reservation.service.js`**
     *   *What it does:* Manages the backend business rules for reservation data operations. It does not touch the UI. It contains the logic to compare dates and time blocks (`startHour` and `endHour`) to prevent schedule overlap or duplicated room bookings.
 
-### ⚙️ Controllers Layer (Business Logic & DOM Events)
+###  Controllers Layer (Business Logic & DOM Events)
 *   **`src/controllers/login.controller.js`**
     *   *What it does:* Manages the authentication form interaction. It captures the email and password inputs, requests user verification from the API, securely stores user role parameters inside `LocalStorage`, and triggers the redirection to the home screen.
 *   **`src/controllers/home.controller.js`**
@@ -61,7 +61,7 @@ All technical stretch goals and advanced modules described in the evaluation gui
 *   **`src/controllers/admin.controller.js`**
     *   *What it does:* Coordinates the administrative panel interactions. It processes real-time metrics for total, approved, and pending requests. It also connects the administrative forms to handle the complete CRUD lifecycle for physical assets inside the `/spaces` collection.
 
-### 🖥️ Templates & Views Layer (HTML Generators)
+###  Templates & Views Layer (HTML Generators)
 *   **`src/views/loginView.js`**
     *   *What it does:* A presentation function returning a clean HTML template string for the login panel, featuring input boxes and buttons styled with TailwindCSS utilities.
 *   **`src/views/homeView.js`**
@@ -71,7 +71,7 @@ All technical stretch goals and advanced modules described in the evaluation gui
 *   **`src/views/notFound.js`**
     *   *What it does:* Renders a standard fallback template for 404 errors. If a user tries to access an invalid hash link, the router displays this custom message to preserve navigation flow.
 
-### 🛠️ Base Global Files
+###  Base Global Files
 *   **`src/utils.js`**
     *   *What it does:* A collection of modular helper functions. It centralizes `LocalStorage` session management with utilities like `saveSession`, `getSession`, and `removeSession` to handle clean user logout operations.
 *   **`db.json`**
@@ -79,7 +79,7 @@ All technical stretch goals and advanced modules described in the evaluation gui
 
 ---
 
-## 🗄️ Database Schema Structure
+##  Database Schema Structure
 
 The database schema includes three highly organized resource collections within the mock API file:
 
@@ -125,7 +125,7 @@ Relational table binding users, chosen workspaces, tracking intervals, and statu
 
 ---
 
-## ⚙️ Project Lifecycle & Installation
+##  Project Lifecycle & Installation
 
 Follow these procedural commands sequentially to execute the development instance locally:
 
@@ -142,7 +142,7 @@ npm run dev
 
 ---
 
-## 🔑 Verification Testing Profiles
+##  Verification Testing Profiles
 
 Use these testing credentials on the login screen to evaluate routing constraints and distinct view layouts:
 
