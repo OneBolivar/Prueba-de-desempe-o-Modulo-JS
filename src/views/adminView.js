@@ -7,7 +7,7 @@ export const adminView = (session) => {
           <h1 class="text-xl font-bold mb-6 tracking-wide">Workspace Admin</h1>
           <nav class="space-y-2">
             <a href="#/home" class="block py-2.5 px-4 rounded hover:bg-indigo-800 transition"> Vista Usuario</a>
-            <a href="#/admin" class="block py-2.5 px-4 rounded bg-indigo-800 font-medium">YY Panel Admin</a>
+            <a href="#/admin" class="block py-2.5 px-4 rounded bg-indigo-800 font-medium"> Panel Admin</a>
           </nav>
         </div>
         <div>
