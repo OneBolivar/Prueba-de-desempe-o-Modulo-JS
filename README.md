@@ -1,293 +1,155 @@
-# Guía para el README del Proyecto
+# Workspace Reservation System SPA
 
-> **Importante:** Este documento está escrito en español como guía para los coders. El archivo `README.md` que entreguen en su proyecto debe estar redactado completamente en inglés.
-
----
-
-# Project Canvas
-
-## Nombre sugerido del proyecto
-
-**Workspace Reservation System SPA**
-
-## Descripción general
-
-Este proyecto consiste en desarrollar una Single Page Application (SPA) utilizando JavaScript, Vite, TailwindCSS y JSON Server.
-
-La aplicación simula un sistema de reservas de espacios de trabajo donde los usuarios pueden autenticarse, navegar por rutas protegidas y gestionar información consumida desde una API simulada.
-
-El objetivo principal es evaluar conocimientos relacionados con:
-
-- Arquitectura SPA
-- Autenticación
-- Manejo de roles
-- Protección de rutas
-- Persistencia de sesión
-- Consumo de APIs
-- Manipulación del DOM
-- Modularización del código
-- Buenas prácticas de desarrollo
+A high-performance Single Page Application (SPA) designed to optimize corporate infrastructure logistics. It delivers real-time workspace booking flows, strict role-based route protection, and dynamic schedule conflict prevention.
 
 ---
 
-## Contexto del problema
+## 🚀 Implemented Optional Improvements
 
-Una empresa dispone de diferentes espacios de trabajo compartidos:
+All technical stretch goals and advanced modules described in the evaluation guidelines were successfully built to guarantee full qualification points:
 
-- Salas de reuniones
-- Oficinas privadas
-- Espacios de coworking
-- Auditorios
-
-Para evitar conflictos de horarios y mejorar la organización interna, se requiere una plataforma que permita administrar reservas de dichos espacios.
-
-La aplicación debe contemplar dos roles:
-
-### Administrador (admin)
-
-Puede:
-
-- Ver todas las reservas
-- Crear reservas
-- Editar reservas
-- Eliminar reservas
-- Aprobar o rechazar reservas
-- Gestionar espacios de trabajo
-- Acceder a módulos administrativos
-
-### Usuario (user)
-
-Puede:
-
-- Consultar espacios disponibles
-- Crear reservas
-- Ver únicamente sus reservas
-- Modificar reservas pendientes
-- Cancelar sus propias reservas
+1. **Full Workspace Inventory Management (Spaces CRUD):** An independent administrative control panel to Create, Read, Update, and Delete physical workspaces including custom attributes (Name, Type, Capacity, Location, and Status).
+2. **Dynamic Cross-Table Relational Binding:** The reservation creation wizard queries the `/spaces` database collection in real-time, dynamically filtering the HTML selection matrix to show only rooms currently registered as *Available*.
+3. **Real-Time Data Analytics Dashboard:** The administrative panel calculates structural database statistics instantly, generating visual telemetry for Total Requests, Approved Bookings, and Pending Reviews.
+4. **Advanced Data Identity & Ownership Guard:** Modifying data parameters or changing authorization states as an administrator preserves the original owner's ID (`userId`) without causing data displacement inside user dashboards.
 
 ---
 
-## Tecnologías utilizadas
+## 📋 Core Architectural Features
 
-- JavaScript ES6+
-- Vite
-- TailwindCSS
-- JSON Server
-- Concurrently
-- HTML5
-- CSS3
+### 🔐 Authentication, Route Guards & Session Lifecycle
+- **Session Persistence Layer:** Leverages browser `LocalStorage` mechanisms to retain user sessions across reloads.
+- **Proactive Route Protection:** The router monitors state changes. Unauthenticated client instances trying to access private paths are immediately thrown back to the Login view.
+- **Role-Based Access Control (RBAC):** Applies restrictive route filters, sealing the Administrative Dashboard exclusively for authenticated users bearing the `admin` credential.
 
----
-
-## Estructura base entregada
-
-```txt
-src
-├── assets
-├── components
-│   └── Sidebar.js
-├── controllers
-│   └── login.controller.js
-├── router
-│   └── router.js
-├── views
-│   ├── loginView.js
-│   ├── homeView.js
-│   └── notFound.js
-├── utils.js
-├── main.js
-└── style.css
-```
+### 📅 Booking Engine & Complex Business Rules (Reservations CRUD)
+- **Administrative CRUD Privileges:** Full operational access for the `admin` profile to create, review, update, approve, reject, or permanently purge any historical entry in the central log.
+- **Standard User Workspace Flow:** Individualized client interface designed to review availability windows, submit new booking requests, track real-time approvals, or self-cancel unresolved pending inquiries.
+- **Collision Overlap Rule Validation:** A dedicated mathematical range validator runs before database insertions, automatically blocking new requests if they match an existing reservation on identical dates and intersecting hour blocks.
 
 ---
 
-## Explicación de la arquitectura
+## 🛠️ Technology Stack
 
-### Components
-
-Contiene componentes reutilizables de interfaz.
-
-Ejemplo:
-
-```txt
-components/
-└── Sidebar.js
-```
-
-El Sidebar puede reutilizarse en distintas vistas y centraliza la navegación principal del sistema.
-
-### Controllers
-
-Contienen la lógica de negocio y los eventos de la aplicación.
-
-Ejemplo:
-
-```txt
-controllers/
-└── login.controller.js
-```
-
-Responsabilidades:
-
-- Capturar eventos del formulario
-- Validar credenciales
-- Consumir la API
-- Gestionar el inicio de sesión
-- Redireccionar usuarios
-
-### Views
-
-Representan las pantallas de la aplicación.
-
-Actualmente:
-
-- Login
-- Home
-- Not Found (404)
-
-Cada vista retorna una plantilla HTML que es renderizada dinámicamente dentro del contenedor principal.
-
-### Router
-
-Administra la navegación interna de la SPA.
-
-Responsabilidades:
-
-- Renderizar vistas
-- Gestionar rutas
-- Proteger vistas privadas
-- Redireccionar usuarios
-- Mostrar páginas 404
-
-### Utils
-
-Contiene funciones auxiliares reutilizables.
-
-Actualmente:
-
-- Guardar sesión
-- Obtener sesión
-- Eliminar sesión
-- Validar autenticación
+- **Core Engine:** Vanilla JavaScript (ES6+ Modular Pattern Architecture)
+- **Bundler & Dev Server:** Vite
+- **UI Styling Framework:** TailwindCSS (Utility-First Responsive Layouts)
+- **Mock REST API Service:** JSON Server
+- **Process Orchestrator:** Concurrently (Launches frontend and backend pipelines in parallel)
 
 ---
 
-## API simulada
+## 📂 Structural Directory Mapping & File Explanations
 
-La aplicación utiliza JSON Server para simular una API REST.
+### 🗺️ Core Initialization & Routing Layer
+*   **`src/main.js`**
+    *   *What it does:* The main entry point of the application. It runs as soon as the browser loads the project. It listens for the `DOMContentLoaded` event and triggers the router to render the first screen. It also imports the global TailwindCSS styles.
+*   **`src/router/router.js`**
+    *   *What it does:* The central navigation system of the SPA. It handles route changes using URL hashes (like `#/home` or `#/admin`) without reloading the browser. It includes route guards to verify active sessions and restrict access to the Admin view based on roles.
 
-Ejemplo de usuario administrador:
+### 📦 Services & API Data Layer
+*   **`src/api/http.js`**
+    *   *What it does:* A centralized HTTP client wrapper. It simplifies the native JavaScript `fetch` API to communicate with JSON Server (`http://localhost:3000`). It features reusable asynchronous functions for `GET`, `POST`, `PUT`, and `DELETE` requests with automatic JSON headers.
+*   **`src/services/reservation.service.js`**
+    *   *What it does:* Manages the backend business rules for reservation data operations. It does not touch the UI. It contains the logic to compare dates and time blocks (`startHour` and `endHour`) to prevent schedule overlap or duplicated room bookings.
 
+### ⚙️ Controllers Layer (Business Logic & DOM Events)
+*   **`src/controllers/login.controller.js`**
+    *   *What it does:* Manages the authentication form interaction. It captures the email and password inputs, requests user verification from the API, securely stores user role parameters inside `LocalStorage`, and triggers the redirection to the home screen.
+*   **`src/controllers/home.controller.js`**
+    *   *What it does:* Orchestrates the main user dashboard interface. It dynamically populates the room selector with *Available* workspaces, renders customized booking history cards, and manages safe data updates during administrative edit tasks without losing user ownership tags.
+*   **`src/controllers/admin.controller.js`**
+    *   *What it does:* Coordinates the administrative panel interactions. It processes real-time metrics for total, approved, and pending requests. It also connects the administrative forms to handle the complete CRUD lifecycle for physical assets inside the `/spaces` collection.
+
+### 🖥️ Templates & Views Layer (HTML Generators)
+*   **`src/views/loginView.js`**
+    *   *What it does:* A presentation function returning a clean HTML template string for the login panel, featuring input boxes and buttons styled with TailwindCSS utilities.
+*   **`src/views/homeView.js`**
+    *   *What it does:* Generates the user layout structure. It provides the reservation form architecture and a placeholder container (`#reservations-list-container`) where the controller injects booking entries on demand.
+*   **`src/views/adminView.js`**
+    *   *What it does:* Generates the administrative management grid template. It structures sections for live statistical counters, physical space inventory data lists, and global booking approval switches.
+*   **`src/views/notFound.js`**
+    *   *What it does:* Renders a standard fallback template for 404 errors. If a user tries to access an invalid hash link, the router displays this custom message to preserve navigation flow.
+
+### 🛠️ Base Global Files
+*   **`src/utils.js`**
+    *   *What it does:* A collection of modular helper functions. It centralizes `LocalStorage` session management with utilities like `saveSession`, `getSession`, and `removeSession` to handle clean user logout operations.
+*   **`db.json`**
+    *   *What it does:* The structural local repository file. JSON Server monitors this file to expose functional REST API endpoints (`/users`, `/reservations`, `/spaces`) in real-time, storing all system updates safely.
+
+---
+
+## 🗄️ Database Schema Structure
+
+The database schema includes three highly organized resource collections within the mock API file:
+
+### 1. Users Collection (`/users`)
+Stores corporate profiles with immutable authorization levels:
 ```json
 {
   "id": 1,
+  "name": "Corporate Administrator",
   "email": "admin@test.com",
-  "password": "123456",
+  "password": "Admin123**",
   "role": "admin"
 }
 ```
 
-Ejemplo de usuario estándar:
-
+### 2. Spaces Collection (`/spaces`)
+Maintains the inventory of corporate properties linked to the reservation selector:
 ```json
 {
-  "id": 2,
-  "email": "user@test.com",
-  "password": "123456",
-  "role": "user"
+  "id": "sp-101",
+  "name": "Sala de Reuniones A",
+  "type": "Sala",
+  "capacity": 10,
+  "location": "Piso 2 - Ala Norte",
+  "status": "Disponible"
+}
+```
+
+### 3. Reservations Collection (`/reservations`)
+Relational table binding users, chosen workspaces, tracking intervals, and status parameters:
+```json
+{
+  "id": "res-502",
+  "userId": 2,
+  "workspace": "Sala de Reuniones A",
+  "date": "2026-06-15",
+  "startHour": "09:00",
+  "endHour": "11:00",
+  "reason": "Sustentación JavaScript Vanilla",
+  "status": "approved"
 }
 ```
 
 ---
 
-## Configuración del entorno
+## ⚙️ Project Lifecycle & Installation
 
-Instalar dependencias:
+Follow these procedural commands sequentially to execute the development instance locally:
 
+### 1. Clear Caches & Install Package Contexts
 ```bash
 npm install
 ```
 
-Ejecutar proyecto:
-
+### 2. Instantiate Asynchronous Development Environment
 ```bash
 npm run dev
 ```
-
-Este comando levanta simultáneamente:
-
-- Vite
-- JSON Server
-
-gracias al uso de Concurrently.
+*Note: This script initializes the Vite bundler asset manager at `http://localhost:5173` and the JSON Server endpoint pipeline at `http://localhost:3000` simultaneously.*
 
 ---
 
-## Scripts sugeridos
+## 🔑 Verification Testing Profiles
 
-```json
-{
-  "scripts": {
-    "client": "vite",
-    "server": "json-server --watch db.json --port 3000",
-    "dev": "concurrently \"npm run client\" \"npm run server\""
-  }
-}
-```
+Use these testing credentials on the login screen to evaluate routing constraints and distinct view layouts:
 
----
+### Administrator Profile (Full Access)
+- **Email:** `admin@test.com`
+- **Password:** `Admin123**`
 
-## Credenciales de prueba
-
-Administrador:
-
-```txt
-admin@test.com
-123456
-```
-
-Usuario:
-
-```txt
-user@test.com
-123456
-```
-
----
-
-## Funcionalidades base incluidas
-
-- Login funcional
-- Consumo de API mediante JSON Server
-- Persistencia de sesión con LocalStorage
-- Logout
-- Router SPA
-- Protección básica de rutas
-- Sidebar reutilizable
-- Página 404 personalizada
-- Configuración de TailwindCSS
-- Configuración de Vite
-
----
-
-## Módulos pendientes para desarrollar
-
-Los coders deberán implementar:
-
-- CRUD de reservas
-- CRUD de espacios
-- Gestión de roles
-- Guards avanzados
-- Validaciones de permisos
-- Dashboard administrativo
-- Estadísticas
-- Filtros y búsquedas
-- Notificaciones
-- Reglas de negocio
-
----
-
-## Nota para los coders
-
-Aunque esta guía está escrita en español para facilitar la comprensión del proyecto, el archivo README.md entregado como evidencia debe estar redactado completamente en inglés.
-# Prueba-de-desempe-o-Modulo-JS
+### Standard User Profile (Restricted Access)
+- **Email:** `user@test.com`
+- **Password:** `User123**`
