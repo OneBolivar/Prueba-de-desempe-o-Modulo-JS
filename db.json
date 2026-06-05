@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@test.com",
+      "password": "A123456",
+      "role": "admin",
+      "name": "Administrador"
+    },
+    {
+      "id": "2",
+      "email": "user@test.com",
+      "password": "A123456",
+      "role": "user",
+      "name": "Usuario"
+    },
+    {
+      "id": "3",
+      "email": "user2@test.com",
+      "password": "A123456",
+      "role": "user",
+      "name": "Usuario 2"
+    }
+  ],
+  "reservations": [
+    {
+      "userId": "1",
+      "workspace": "Auditorio Principal",
+      "date": "2026-07-02",
+      "startHour": "11:00",
+      "endHour": "23:59",
+      "reason": "Cumpleaños de Yei\n",
+      "status": "approved",
+      "id": "BCX9We5rbKQ"
+    },
+    {
+      "workspace": "Oficina Privada Ejecutiva",
+      "date": "1111-11-11",
+      "startHour": "10:22",
+      "endHour": "22:22",
+      "reason": "11111",
+      "status": "rejected",
+      "userId": "2",
+      "id": "tgKym02utIE"
+    },
+    {
+      "workspace": "Oficina Privada Ejecutiva",
+      "date": "1111-11-11",
+      "startHour": "10:22",
+      "endHour": "22:22",
+      "reason": "22222",
+      "status": "approved",
+      "userId": "3",
+      "id": "k_a6r5u4kag"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
