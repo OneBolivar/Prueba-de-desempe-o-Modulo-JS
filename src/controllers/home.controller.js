@@ -8,11 +8,33 @@ export const initHomeController = async () => {
   const reservationForm = document.getElementById('reservation-form');
   const container = document.getElementById('reservations-list-container');
   const logoutBtn = document.getElementById('logout-btn');
+  const spaceSelect = document.getElementById('space-select');
 
   // Control del estado global de edición dentro de la SPA
   let editingReservationId = null;
 
-  // Manejo del Cierre de Sesión 
+  // 1. Relación Dinámica: Poblar el selector de espacios desde la Base de Datos (/spaces)
+  try {
+    const { http } = await import('../api/http.js');
+    const allSpaces = await http.get('/spaces');
+    
+    // Regla de negocio: Mostrar únicamente los espacios que se encuentran en estado 'Disponible'
+    const availableSpaces = allSpaces.filter(s => s.status === 'Disponible');
+    
+    if (spaceSelect) {
+      if (availableSpaces.length === 0) {
+        spaceSelect.innerHTML = `<option value="">No hay espacios disponibles actualmente</option>`;
+      } else {
+        spaceSelect.innerHTML = availableSpaces.map(s => `
+          <option value="${s.id}">${s.name} (${s.location} - Cap: ${s.capacity} pax)</option>
+        `).join('');
+      }
+    }
+  } catch (error) {
+    console.error("Error cargando el catálogo dinámico de espacios:", error);
+  }
+
+  // 2. Manejo del Cierre de Sesión (Logout funcional mandatorio)
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('session');
@@ -20,10 +42,10 @@ export const initHomeController = async () => {
     });
   }
 
-  // Función interna para renderizar la lista de reservas en tiempo real
+  // 3. Función interna para renderizar la lista de reservas en tiempo real
   const renderReservations = async () => {
     try {
-      // El Administrador ve todas las reservas y el usuario solo ve las suyas
+      // El Administrador ve todas las reservas; el usuario estándar solo ve las suyas
       const data = session.role === 'admin' 
         ? await reservationService.getAll() 
         : await reservationService.getByUserId(session.id);
@@ -35,7 +57,7 @@ export const initHomeController = async () => {
         return;
       }
 
-      
+      // Mapeo dinámico leyendo de forma exacta la estructura de tu db.json
       container.innerHTML = data.map(res => {
         const currentStatus = (res.status || 'pending').toLowerCase();
 
@@ -59,7 +81,7 @@ export const initHomeController = async () => {
                 <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded text-sm font-medium btn-edit" data-id="${res.id}">Editar</button>
               ` : ''}
 
-              <!-- Comparación normalizada en minúsculas para asegurar que aparezcan siempre -->
+              <!-- Comparación normalizada en minúsculas para asegurar visibilidad reactiva -->
               ${session.role === 'admin' && currentStatus === 'pending' ? `
                 <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded text-sm font-medium btn-approve" data-id="${res.id}">Aprobar</button>
                 <button class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded text-sm font-medium btn-reject" data-id="${res.id}">Rechazar</button>
@@ -83,7 +105,7 @@ export const initHomeController = async () => {
     }
   };
 
-  // 3. Manejo de eventos de los botones de cada tarjeta de reserva
+  // 4. Manejo de eventos de los botones de cada tarjeta de reserva
   const attachEventHandlers = (allReservations) => {
     container.querySelectorAll('.btn-edit').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -93,11 +115,12 @@ export const initHomeController = async () => {
         if (reservation) {
           editingReservationId = id; // Capturar ID del recurso en edición
           
-          const spaceSelect = document.getElementById('space-select');
-          for (let i = 0; i < spaceSelect.options.length; i++) {
-            if (spaceSelect.options[i].text === reservation.workspace) {
-              spaceSelect.selectedIndex = i;
-              break;
+          if (spaceSelect) {
+            for (let i = 0; i < spaceSelect.options.length; i++) {
+              if (spaceSelect.options[i].text.includes(reservation.workspace)) {
+                spaceSelect.selectedIndex = i;
+                break;
+              }
             }
           }
 
@@ -117,7 +140,6 @@ export const initHomeController = async () => {
 
     container.querySelectorAll('.btn-approve').forEach(btn => {
       btn.addEventListener('click', async (e) => {
-        // Guardamos explícitamente en minúscula para mantener consistencia
         await reservationService.changeStatus(e.target.dataset.id, 'approved', session.role);
         await renderReservations();
       });
@@ -151,7 +173,7 @@ export const initHomeController = async () => {
     });
   };
 
-  // 4. Manejo unificado del formulario (Creación y Edición Blindada)
+  // 5. Manejo unificado del formulario (Creación y Edición Blindada)
   if (reservationForm) {
     const newForm = reservationForm.cloneNode(true);
     reservationForm.parentNode.replaceChild(newForm, reservationForm);
@@ -159,14 +181,22 @@ export const initHomeController = async () => {
     newForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const spaceSelect = document.getElementById('space-select');
+      if (spaceSelect && !spaceSelect.value) {
+        alert('Por favor, selecciona un espacio de trabajo válido.');
+        return;
+      }
+
+      // Extraer el texto limpio del nombre del espacio sin los metadatos de capacidad
+      const fullText = spaceSelect.options[spaceSelect.selectedIndex].text;
+      const cleanWorkspaceName = fullText.split(' (')[0];
+
       const reservationData = {
-        workspace: spaceSelect.options[spaceSelect.selectedIndex].text,
+        workspace: cleanWorkspaceName,
         date: document.getElementById('res-date').value,
         startHour: document.getElementById('res-start').value,
         endHour: document.getElementById('res-end').value,
         reason: document.getElementById('res-reason').value,
-        status: 'pending' // Estado por defecto base en minúsculas
+        status: 'pending' // Estado base por defecto
       };
 
       try {
@@ -175,7 +205,6 @@ export const initHomeController = async () => {
           const allRes = await reservationService.getAll();
           const currentRes = allRes.find(r => r.id == editingReservationId);
           
-          // Preservamos el userId original y el estado de aprobación actual
           reservationData.userId = currentRes ? currentRes.userId : session.id;
           reservationData.status = currentRes ? currentRes.status : 'pending';
 
@@ -189,7 +218,7 @@ export const initHomeController = async () => {
             submitBtn.classList.replace('bg-blue-600', 'bg-indigo-600');
           }
         } else {
-          // MODO CREACIÓN: El dueño de la reserva es la sesión actual
+          // MODO CREACIÓN: El dueño de la reserva es el usuario activo
           reservationData.userId = session.id;
           await reservationService.create(reservationData);
           alert('Reserva creada exitosamente.');
@@ -198,10 +227,10 @@ export const initHomeController = async () => {
         newForm.reset();
         await renderReservations();
       } catch (error) {
-        alert(error.message);
+        alert(error.message); // Muestra la alerta si colisionan los rangos de horas
       }
     });
   }
-
-  await renderReservations();
+await renderReservations();
 };
+  
