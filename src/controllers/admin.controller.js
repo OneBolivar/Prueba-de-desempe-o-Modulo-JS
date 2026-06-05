@@ -25,12 +25,12 @@ export const initAdminController = async () => {
       const reservations = await reservationService.getAll();
       const spaces = await http.get('/spaces');
 
-      // 1. Renderizar Estadísticas de Reservas
+      // Renderizar Estadísticas de Reservas
       document.getElementById('stat-total').textContent = reservations.length;
       document.getElementById('stat-approved').textContent = reservations.filter(r => (r.status || '').toLowerCase() === 'approved').length;
       document.getElementById('stat-pending').textContent = reservations.filter(r => (r.status || '').toLowerCase() === 'pending').length;
 
-      // 2. Renderizar Tabla de Espacios (CRUD - READ)
+      // Renderizar Tabla de Espacios (CRUD - READ)
       if (spacesTbody) {
         if (spaces.length === 0) {
           spacesTbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-500">No hay espacios creados.</td></tr>`;
@@ -50,7 +50,7 @@ export const initAdminController = async () => {
         }
       }
 
-      // 3. Renderizar Lista Global de Reservas
+      // Renderizar Lista Global de Reservas
       if (resContainer) {
         resContainer.innerHTML = reservations.map(res => {
           const currentStatus = (res.status || 'pending').toLowerCase();
