@@ -1,6 +1,6 @@
 import { loginView } from '../views/loginView.js';
 import { homeView } from '../views/homeView.js';
-import { adminView } from '../views/adminView.js'; // 1. Importar la nueva vista
+import { adminView } from '../views/adminView.js'; 
 import { notFound } from '../views/notFound.js';
 import { getSession } from '../utils.js';
 
@@ -8,7 +8,7 @@ const routes = {
   '/': { view: homeView, authRequired: true, role: 'any' },
   '/home': { view: homeView, authRequired: true, role: 'any' },
   '/login': { view: loginView, authRequired: false, role: 'any' },
-  '/admin': { view: adminView, authRequired: true, role: 'admin' } // 2. Asignar la vista correcta
+  '/admin': { view: adminView, authRequired: true, role: 'admin' } //Asignar la vista correcta
 };
 
 export const router = async () => {
@@ -47,7 +47,7 @@ export const router = async () => {
 
   appContainer.innerHTML = route.view(session);
 
-  // 3. Inicialización síncrona/asíncrona de controladores post-render
+  // Inicialización síncrona/asíncrona de controladores post-render
   if (path === '/login') {
     const { initLoginController } = await import('../controllers/login.controller.js');
     initLoginController();

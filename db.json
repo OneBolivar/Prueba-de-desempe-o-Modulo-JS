@@ -42,16 +42,6 @@
       "status": "rejected",
       "userId": "2",
       "id": "tgKym02utIE"
-    },
-    {
-      "workspace": "Oficina Privada Ejecutiva",
-      "date": "1111-11-11",
-      "startHour": "10:22",
-      "endHour": "22:22",
-      "reason": "22222",
-      "status": "approved",
-      "userId": "3",
-      "id": "k_a6r5u4kag"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
