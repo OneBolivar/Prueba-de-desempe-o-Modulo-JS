@@ -8,10 +8,11 @@ export const initAdminController = async () => {
 
   const resContainer = document.getElementById('admin-reservations-container');
   const spacesTbody = document.getElementById('admin-spaces-tbody');
+  const usersContainer = document.getElementById('admin-users-container'); // Capturamos contenedor de usuarios
   const spaceForm = document.getElementById('space-form');
   const logoutBtn = document.getElementById('logout-btn');
 
-  let editingSpaceId = null; // Estado para ver si editamos un espacio
+  let editingSpaceId = null;
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -22,15 +23,36 @@ export const initAdminController = async () => {
 
   const loadAdminData = async () => {
     try {
+      // Realizar peticiones HTTP paralelas a la base de datos simulada
       const reservations = await reservationService.getAll();
       const spaces = await http.get('/spaces');
+      const users = await http.get('/users'); // Petición para traer usuarios
 
-      // Renderizar Estadísticas de Reservas
+      //  Renderizar Estadísticas de Reservas
       document.getElementById('stat-total').textContent = reservations.length;
       document.getElementById('stat-approved').textContent = reservations.filter(r => (r.status || '').toLowerCase() === 'approved').length;
       document.getElementById('stat-pending').textContent = reservations.filter(r => (r.status || '').toLowerCase() === 'pending').length;
 
-      // Renderizar Tabla de Espacios (CRUD - READ)
+      //  RENDERIZAR LISTA DE USUARIOS REGISTRADOS
+      if (usersContainer) {
+        if (users.length === 0) {
+          usersContainer.innerHTML = '<p class="text-gray-500 text-sm">No hay usuarios en la base de datos.</p>';
+        } else {
+          usersContainer.innerHTML = users.map(u => `
+            <div class="pt-3 flex items-center justify-between text-sm">
+              <div class="truncate pr-2">
+                <p class="font-medium text-gray-800">${u.name || 'Sin nombre registrado'}</p>
+                <p class="text-xs text-gray-500 truncate">${u.email}</p>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded ${
+                u.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+              }">${u.role}</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      //  Renderizar Tabla de Espacios (CRUD - READ)
       if (spacesTbody) {
         if (spaces.length === 0) {
           spacesTbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-500">No hay espacios creados.</td></tr>`;
@@ -50,7 +72,7 @@ export const initAdminController = async () => {
         }
       }
 
-      // Renderizar Lista Global de Reservas
+      //  Renderizar Lista Global de Reservas
       if (resContainer) {
         resContainer.innerHTML = reservations.map(res => {
           const currentStatus = (res.status || 'pending').toLowerCase();
@@ -79,12 +101,10 @@ export const initAdminController = async () => {
   };
 
   const attachEvents = (allSpaces) => {
-    // Escuchar botones de aprobación/cancelación de reservas
     resContainer.querySelectorAll('.btn-admin-approve').forEach(b => b.addEventListener('click', async (e) => { await reservationService.changeStatus(e.target.dataset.id, 'approved', session.role); loadAdminData(); }));
     resContainer.querySelectorAll('.btn-admin-reject').forEach(b => b.addEventListener('click', async (e) => { await reservationService.changeStatus(e.target.dataset.id, 'rejected', session.role); loadAdminData(); }));
     resContainer.querySelectorAll('.btn-admin-delete').forEach(b => b.addEventListener('click', async (e) => { if(confirm('¿Eliminar reserva?')) { await reservationService.delete(e.target.dataset.id, session.role); loadAdminData(); } }));
 
-    // CRUD Espacios: Cargar datos en el formulario al Editar
     spacesTbody.querySelectorAll('.btn-space-edit').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = e.target.dataset.id;
@@ -104,7 +124,6 @@ export const initAdminController = async () => {
       });
     });
 
-    // CRUD Espacios: Eliminar recurso (DELETE)
     spacesTbody.querySelectorAll('.btn-space-delete').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         if (confirm('¿Estás seguro de eliminar permanentemente este espacio del inventario?')) {
@@ -115,7 +134,6 @@ export const initAdminController = async () => {
     });
   };
 
-  // CRUD Espacios: Formulario de Creación y Edición (POST / PUT)
   if (spaceForm) {
     const newForm = spaceForm.cloneNode(true);
     spaceForm.parentNode.replaceChild(newForm, spaceForm);

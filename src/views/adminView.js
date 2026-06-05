@@ -7,7 +7,7 @@ export const adminView = (session) => {
           <h1 class="text-xl font-bold mb-6 tracking-wide">Workspace Admin</h1>
           <nav class="space-y-2">
             <a href="#/home" class="block py-2.5 px-4 rounded hover:bg-indigo-800 transition"> Vista Usuario</a>
-            <a href="#/admin" class="block py-2.5 px-4 rounded bg-indigo-800 font-medium"> Panel Admin</a>
+            <a href="#/admin" class="block py-2.5 px-4 rounded bg-indigo-800 font-medium">YY Panel Admin</a>
           </nav>
         </div>
         <div>
@@ -40,7 +40,7 @@ export const adminView = (session) => {
           </div>
         </div>
 
-        <!-- SECCIÓN CRUD DE ESPACIOS (Puntos Extra) -->
+        <!-- SECCIÓN CRUD DE ESPACIOS E INVENTARIO -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <!-- Formulario de Espacios -->
           <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 h-fit">
@@ -102,11 +102,22 @@ export const adminView = (session) => {
           </div>
         </div>
 
-        <!-- Listado Maestro de Control de Reservas -->
-        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h3 class="text-lg font-bold text-gray-700 mb-4">Consola de Control de Reservas Globales</h3>
-          <div id="admin-reservations-container" class="space-y-3">
-            <p class="text-gray-500">Cargando solicitudes...</p>
+        <!-- SECCIÓN DE RESERVAS Y USUARIOS EN PARALELO -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Listado Maestro de Control de Reservas -->
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 lg:col-span-2">
+            <h3 class="text-lg font-bold text-gray-700 mb-4">Consola de Control de Reservas Globales</h3>
+            <div id="admin-reservations-container" class="space-y-3">
+              <p class="text-gray-500">Cargando solicitudes...</p>
+            </div>
+          </div>
+
+          <!-- NUEVO CONTENEDOR: Lista de Usuarios en el Sistema -->
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 lg:col-span-1">
+            <h3 class="text-lg font-bold text-gray-700 mb-4">Usuarios Registrados</h3>
+            <div id="admin-users-container" class="space-y-3 divide-y divide-gray-100 max-h-[400px] overflow-y-auto">
+              <p class="text-gray-500">Cargando cuentas...</p>
+            </div>
           </div>
         </div>
       </main>

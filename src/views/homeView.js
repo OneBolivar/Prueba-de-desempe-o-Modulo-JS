@@ -9,7 +9,7 @@ export const homeView = (session) => {
           <h1 class="text-xl font-bold mb-6 tracking-wide">Workspace SPA</h1>
           <nav class="space-y-2">
             <a href="#/home" class="block py-2.5 px-4 rounded bg-indigo-800 font-medium">Reservas</a>
-            ${isAdmin ? `<a href="#/admin" class="block py-2.5 px-4 rounded hover:bg-indigo-800 transition">⚙️ Panel Admin</a>` : ''}
+            ${isAdmin ? `<a href="#/admin" class="block py-2.5 px-4 rounded hover:bg-indigo-800 transition">Panel Admin</a>` : ''}
           </nav>
         </div>
         <div>
